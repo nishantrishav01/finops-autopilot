@@ -141,12 +141,21 @@ label small {
   position: fixed;
   inset: 0 auto 0 0;
   width: 236px;
+  height: 100vh;
+  height: 100dvh;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior-y: contain;
+  scrollbar-width: thin;
   border-right: 1px solid var(--border);
   background: #fff;
   display: flex;
   flex-direction: column;
   padding: 30px 17px 0;
   z-index: 20;
+}
+.sidebar > * {
+  flex-shrink: 0;
 }
 .brand {
   display: flex;
