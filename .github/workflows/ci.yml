@@ -21,9 +21,12 @@ jobs:
         run: python -m pip install -r requirements-dev.txt
       - name: Backend and credential security tests
         run: python -m pytest -q
+      - name: Publication safety checks
+        run: python scripts/verify-publication.py
       - name: Frontend build
         run: |
           npm ci --prefix apps/web
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm run build
       - name: Browser workflows
         run: |
@@ -35,7 +38,10 @@ jobs:
           CDK_DEFAULT_REGION: ap-south-1
         run: |
           npm ci --prefix infra
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           ./scripts/package-lambda.ps1
           npm --prefix infra run check
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm --prefix infra run test
+          if ($LASTEXITCODE -ne 0) { exit $LASTEXITCODE }
           npm --prefix infra run synth

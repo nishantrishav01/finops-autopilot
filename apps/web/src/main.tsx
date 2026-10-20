@@ -604,7 +604,10 @@ function App() {
         <div className="sidebar-bottom">
           <div className="local-card">
             <span className="local-title">
-              <span className="pulse-dot" /> {user.deployment === "serverless" ? "Cloud workspace" : "Running locally"}{" "}
+              <span className="pulse-dot" />{" "}
+              {user.deployment === "serverless"
+                ? "Cloud workspace"
+                : "Running locally"}{" "}
               <span className="version">v0.2</span>
             </span>
             <p>Your cloud data. Your control.</p>
@@ -1434,7 +1437,11 @@ function App() {
                     </div>
                     <div className="settings-line">
                       <span>Persistence</span>
-                      <strong>{user.deployment === "serverless" ? "DynamoDB + S3" : "Local SQLite"}</strong>
+                      <strong>
+                        {user.deployment === "serverless"
+                          ? "DynamoDB + S3"
+                          : "Local SQLite"}
+                      </strong>
                     </div>
                     <div className="settings-line">
                       <span>Live collection</span>
@@ -1503,10 +1510,10 @@ function App() {
                       Connect your accounts, collect billing, and inspect the
                       evidence behind each opportunity. Review missing telemetry
                       and business approvals before approving a plan. AWS native
-                      recommendations are supported; Azure and Google Cloud source
-                      recommendations can be imported. Bedrock guidance requires
-                      your administrator's processing approval and an enabled
-                      platform configuration.
+                      recommendations are supported; Azure and Google Cloud
+                      source recommendations can be imported. Bedrock guidance
+                      requires your administrator's processing approval and an
+                      enabled platform configuration.
                     </p>
                     <button
                       className="text-button"
@@ -1526,14 +1533,16 @@ function App() {
             </span>
             <span>
               <ShieldCheck size={13} /> Read-only by design <span>·</span>
-              {user.deployment === "serverless" ? "Cloud deployment" : "Local development"}
+              {user.deployment === "serverless"
+                ? "Cloud deployment"
+                : "Local development"}
             </span>
           </footer>
         </main>
       </div>
       {connectOpen && (
         <ConnectionWizard
-          close={() => setConnectOpen(false)}
+          close={() => { setConnectOpen(false); void refresh(); }}
           created={async (c) => {
             setConnectOpen(false);
             setAccount(c);

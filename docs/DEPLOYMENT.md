@@ -40,7 +40,7 @@ The API persists queued jobs in DynamoDB. Its stream dispatches a Standard workf
 
 ## Failure handling
 
-Check the job error in the application first. SDK provider errors are redacted before persistence. Use CloudWatch request IDs and CloudFormation failure events for infrastructure diagnosis; never enable request-body or SDK wire logging with real credentials.
+Check the job error in the application first. SDK provider errors are redacted before persistence. Use CloudWatch request IDs and CloudFormation failure events for infrastructure diagnosis; never enable request-body or SDK wire logging with real credentials. Legacy CloudFront request logging is disabled because it records OAuth callback query strings. CloudFront metrics and sanitized API request logs remain available. If edge request logs are required, configure v2 delivery with an explicit field list that excludes query strings/cookies and validate that authentication artifacts are absent before enabling it.
 
 For dispatch failures, inspect the corresponding stream sequence/job ID, verify why dispatch failed, and start the workflow using the **same job ID** as execution name. Do not invent a new execution name to replay the same job. Standard execution idempotency and worker terminal-state checks prevent ordinary duplicate delivery from repeating work. After 23 hours of unsuccessful dispatch the stream failure destination is the operator's recovery source; the original job remains queued until reconciled.
 

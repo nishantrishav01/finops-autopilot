@@ -50,7 +50,6 @@ export class DataStack extends cdk.Stack {
     bucketPolicy.policyDocument = {...policy.toJSON(),Statement:statements};
     trail.applyRemovalPolicy(cdk.RemovalPolicy.RETAIN);
     NagSuppressions.addResourceSuppressions(this.accessLogs,[{id:'AwsSolutions-S1',reason:'Dedicated access-log destination. Self-logging would recursively generate log objects.'}]);
-    NagSuppressions.addResourceSuppressions(this.pool,[{id:'AwsSolutions-COG3',reason:'TOTP MFA is required. Advanced threat protection is a separately priced customer rollout decision, documented in the operations guide.'}]);
     new cdk.CfnOutput(this,'UserPoolId',{value:this.pool.userPoolId});
   }
 }
@@ -131,7 +130,9 @@ export class ApplicationStack extends cdk.Stack {
     ]});
     new waf.CfnWebACLAssociation(this,'ApiFirewallAssociation',{webAclArn:acl.attrArn,resourceArn:api.deploymentStage.stageArn});
     const distribution = new cf.Distribution(this,'Web',{defaultRootObject:'index.html',
-      enableLogging:true,logBucket:data.accessLogs,logFilePrefix:'cloudfront/',logIncludesCookies:false,
+      // Legacy CloudFront access logs contain OAuth callback query strings.
+      // Retain sanitized API logs/metrics; do not persist authorization codes.
+      enableLogging:false,
       defaultBehavior:{origin:origins.S3BucketOrigin.withOriginAccessControl(webBucket),viewerProtocolPolicy:cf.ViewerProtocolPolicy.REDIRECT_TO_HTTPS,
         responseHeadersPolicy:cf.ResponseHeadersPolicy.SECURITY_HEADERS,cachePolicy:cf.CachePolicy.CACHING_OPTIMIZED},
       additionalBehaviors:{'v1/*':{origin:new origins.RestApiOrigin(api),viewerProtocolPolicy:cf.ViewerProtocolPolicy.HTTPS_ONLY,
@@ -173,6 +174,7 @@ export class ApplicationStack extends cdk.Stack {
       {id:'AwsSolutions-APIG2',reason:'FastAPI Pydantic enforces strict request schemas and a 2MB body limit before handlers; Gateway request-body tracing is disabled.'}],true);
     NagSuppressions.addResourceSuppressions(distribution,[{id:'AwsSolutions-CFR1',reason:'Global access is required for customer sign-in; tenant data processing remains in Mumbai.'},
       {id:'AwsSolutions-CFR2',reason:'Regional WAF protects every API endpoint including the default API domain. Static CloudFront origin contains no private business data.'},
+      {id:'AwsSolutions-CFR3',reason:'Legacy edge access logs include OAuth callback query strings. They are disabled to avoid retaining authorization codes; sanitized API access logs and CloudFront metrics remain enabled. Add configurable-field v2 edge delivery before enabling edge request logs.'},
       {id:'AwsSolutions-CFR4',reason:'AWS default CloudFront certificate is used until the customer supplies a custom domain and ACM certificate.'}]);
     for(const fn of [apiFn,worker,failed,dispatcher]) NagSuppressions.addResourceSuppressions(fn,[
       {id:'AwsSolutions-L1',reason:'Python 3.12 is pinned for the tested manylinux dependency bundle; upgrade together with the runtime lock and tests.'},

@@ -34,12 +34,17 @@ test('durable work uses a stream outbox, Standard workflow and failure queue',()
   runtime.resourceCountIs('AWS::SQS::Queue',1);
 });
 test('business API never logs bodies and Bedrock stays disabled initially',()=>{
+  runtime.hasResourceProperties('AWS::CloudFront::Distribution',{DistributionConfig:Match.objectLike({Logging:Match.absent()})});
   runtime.hasResourceProperties('AWS::ApiGateway::Stage',{MethodSettings:Match.arrayWith([Match.objectLike({DataTraceEnabled:false})])});
   runtime.hasResourceProperties('AWS::Lambda::Function',{Handler:'services.api.lambda_handler.handler',
     Environment:{Variables:Match.objectLike({FINOPS_STORE:'dynamodb',FINOPS_BEDROCK_ENABLED:'false'})}});
   const serialized=JSON.stringify(runtime.toJSON());
   assert(!serialized.includes('AWS_SECRET_ACCESS_KEY'));
   assert(!serialized.includes('bedrock:InvokeModel'));
+  const policies=runtime.findResources('AWS::IAM::Policy');
+  const apiPolicy=Object.entries(policies).find(([key])=>key.startsWith('ApiServiceRole'));
+  assert(apiPolicy);
+  assert(!JSON.stringify(apiPolicy[1]).includes('s3:DeleteObject'));
 });
 test('CloudTrail can use its KMS key only for the declared trail',()=>{
   persistent.hasResourceProperties('AWS::KMS::Key',{KeyPolicy:Match.objectLike({Statement:Match.arrayWith([

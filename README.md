@@ -4,6 +4,8 @@ Multi-client cloud cost visibility and evidence-based optimization planning for 
 
 React + TypeScript · FastAPI · AWS CDK · DynamoDB · S3/Athena · Amazon Bedrock
 
+**[Open the deployed application](https://d3uun3y7jmy2gy.cloudfront.net)** · [Deployment record](docs/DEPLOYMENT_RECORD.md)
+
 New workspaces start empty. There is no demo sign-in, generated billing history or sample cloud-account option. Existing explicitly synthetic local records are removed during the local database migration; real workspaces are preserved. Test fixtures exist only in the isolated test suite.
 
 ## Application interface
