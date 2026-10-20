@@ -38,6 +38,21 @@ Cloud functions set `FINOPS_ENABLE_LIVE=true`. Nothing collects automatically at
 
 The API persists queued jobs in DynamoDB. Its stream dispatches a Standard workflow. The SQS dispatch-failure queue is retained for 14 days and alarmed. Alarms currently exist in CloudWatch without an email, pager or on-call subscription; configure an approved notification destination before operational handover. Application audit events and encrypted management CloudTrail support investigation, but privileged administrators can still change application records.
 
+## Operator Athena analytics
+
+Use workgroup `finops-billing`, database `finops_billing`, and table `billing_snapshots`. The workgroup enforces the encrypted project result location and the 1 GiB scan cap. Obtain the intended tenant, connection and **current snapshot** from the server's DynamoDB billing pointer before querying. Injected partition projection requires these three explicit filters; it does not grant customer access or choose the latest snapshot for you.
+
+```sql
+SELECT currency, SUM(amount) AS selected_snapshot_cost
+FROM finops_billing.billing_snapshots
+WHERE tenant = '<server-derived-tenant>'
+  AND connection = '<connection-id>'
+  AND snapshot = '<active-snapshot-id>'
+GROUP BY currency;
+```
+
+This is a query template, not a live customer billing result. Never combine historical snapshots as if they were independent spending periods. See [AWS injected partition projection](https://docs.aws.amazon.com/athena/latest/ug/partition-projection-dynamic-id-partitioning.html) for the required filter behavior. No live Athena billing query was used for this release's verification.
+
 ## Failure handling
 
 Check the job error in the application first. SDK provider errors are redacted before persistence. Use CloudWatch request IDs and CloudFormation failure events for infrastructure diagnosis; never enable request-body or SDK wire logging with real credentials. Legacy CloudFront request logging is disabled because it records OAuth callback query strings. CloudFront metrics and sanitized API request logs remain available. If edge request logs are required, configure v2 delivery with an explicit field list that excludes query strings/cookies and validate that authentication artifacts are absent before enabling it.

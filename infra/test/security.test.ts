@@ -32,6 +32,9 @@ test('durable work uses a stream outbox, Standard workflow and failure queue',()
   runtime.hasResourceProperties('AWS::Lambda::EventSourceMapping',{FunctionResponseTypes:['ReportBatchItemFailures'],
     MaximumRetryAttempts:5,StartingPosition:'TRIM_HORIZON',FilterCriteria:Match.anyValue()});
   runtime.resourceCountIs('AWS::SQS::Queue',1);
+  runtime.hasResourceProperties('AWS::Glue::Table',{TableInput:Match.objectLike({Parameters:Match.objectLike({
+    'projection.enabled':'true','projection.tenant.type':'injected','projection.connection.type':'injected','projection.snapshot.type':'injected'
+  }),PartitionKeys:[{Name:'tenant',Type:'string'},{Name:'connection',Type:'string'},{Name:'snapshot',Type:'string'}]})});
 });
 test('business API never logs bodies and Bedrock stays disabled initially',()=>{
   runtime.hasResourceProperties('AWS::CloudFront::Distribution',{DistributionConfig:Match.objectLike({Logging:Match.absent()})});

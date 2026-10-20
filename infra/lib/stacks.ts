@@ -22,6 +22,9 @@ export class DataStack extends cdk.Stack {
     this.accessLogs = new s3.Bucket(this,'AccessLogs',{encryption:s3.BucketEncryption.S3_MANAGED,
       blockPublicAccess:s3.BlockPublicAccess.BLOCK_ALL,enforceSSL:true,objectOwnership:s3.ObjectOwnership.OBJECT_WRITER,
       removalPolicy:cdk.RemovalPolicy.RETAIN,lifecycleRules:[{expiration:cdk.Duration.days(180)}]});
+    // Keep the existing cross-stack export while the consumer removes legacy edge logging.
+    // Removing an export before its deployed consumer updates would block CloudFormation.
+    this.exportValue(this.accessLogs.bucketRegionalDomainName);
     this.dataBucket = new s3.Bucket(this,'Analytics',{encryption:s3.BucketEncryption.KMS,encryptionKey:this.key,bucketKeyEnabled:true,
       blockPublicAccess:s3.BlockPublicAccess.BLOCK_ALL,enforceSSL:true,versioned:true,
       serverAccessLogsBucket:this.accessLogs,serverAccessLogsPrefix:'analytics/',removalPolicy:cdk.RemovalPolicy.RETAIN});
@@ -156,7 +159,11 @@ export class ApplicationStack extends cdk.Stack {
       {id:'AwsSolutions-IAM5',reason:'CDK provider manages objects in the generated frontend/asset buckets and invalidates the generated distribution. Its code is supplied by pinned aws-cdk-lib.'}],true);
     const database = new glue.CfnDatabase(this,'BillingCatalog',{catalogId:this.account,databaseInput:{name:'finops_billing'}});
     new glue.CfnTable(this,'BillingTable',{catalogId:this.account,databaseName:database.ref,tableInput:{name:'billing_snapshots',tableType:'EXTERNAL_TABLE',
-      parameters:{classification:'json'},storageDescriptor:{location:`s3://${data.dataBucket.bucketName}/curated/`,
+      parameters:{classification:'json','projection.enabled':'true','projection.tenant.type':'injected',
+        'projection.connection.type':'injected','projection.snapshot.type':'injected',
+        'storage.location.template':'s3://'+data.dataBucket.bucketName+'/curated/tenant=${tenant}/connection=${connection}/snapshot=${snapshot}/'},
+      partitionKeys:[{name:'tenant',type:'string'},{name:'connection',type:'string'},{name:'snapshot',type:'string'}],
+      storageDescriptor:{location:`s3://${data.dataBucket.bucketName}/curated/`,
         inputFormat:'org.apache.hadoop.mapred.TextInputFormat',outputFormat:'org.apache.hadoop.hive.ql.io.HiveIgnoreKeyTextOutputFormat',
         serdeInfo:{serializationLibrary:'org.openx.data.jsonserde.JsonSerDe'},columns:[
           {name:'date',type:'string'},{name:'service',type:'string'},{name:'amount',type:'decimal(38,18)'},{name:'currency',type:'string'},
