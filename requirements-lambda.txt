@@ -1,0 +1,2 @@
+-r requirements-cloud.txt
+mangum==0.21.0

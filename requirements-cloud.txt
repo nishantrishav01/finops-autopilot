@@ -1,0 +1,4 @@
+-r requirements.txt
+boto3==1.43.115
+azure-identity==1.26.0
+google-cloud-bigquery==3.46.2

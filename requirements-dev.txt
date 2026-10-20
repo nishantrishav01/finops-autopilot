@@ -1,0 +1,2 @@
+-r requirements-cloud.txt
+moto[dynamodb,s3]==5.1.16

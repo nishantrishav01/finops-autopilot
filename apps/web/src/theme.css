@@ -1,0 +1,350 @@
+/* Readable text and semantic state colors on the light dashboard surfaces. */
+html,
+body,
+#root {
+  width: 100%;
+  overflow-x: clip;
+}
+.app-shell,
+.main-shell {
+  max-width: 100%;
+}
+.kpi-card {
+  min-width: 0;
+}
+.table-scroll {
+  position: relative;
+}
+.kpi-top,
+.filter-select select,
+.currency-select select,
+.freshness,
+.section-title p,
+.card-heading p,
+.legend,
+.chart-footer,
+.data-note,
+.page-footer {
+  color: #796c87;
+}
+.kpi-top {
+  font-size: 11px;
+}
+.kpi-foot {
+  font-size: 9px;
+  color: #7c6b8a;
+}
+.kpi-foot .purple-text {
+  color: #8159ad;
+}
+.card-heading h2 {
+  font-size: 14px;
+  color: #4b3b5b;
+}
+.card-heading p {
+  font-size: 10px;
+}
+.section-title h2 {
+  font-size: 15px;
+}
+.table-title {
+  font-size: 12px;
+  color: #604474;
+}
+th {
+  font-size: 10px;
+  color: #786286;
+}
+td small {
+  font-size: 10px;
+  color: #8d769b;
+}
+.service-cell {
+  font-size: 11px;
+  color: #796289;
+}
+.savings {
+  font-size: 12px;
+  color: #79529b;
+}
+.sample-label {
+  font-size: 7px;
+  color: #846397;
+  border-color: #ddcbe9;
+}
+.environment {
+  color: #826d91;
+}
+.badge,
+.risk {
+  font-size: 9px;
+}
+.badge.purple {
+  color: #80569f;
+  background: #f4ecfb;
+}
+.badge.green,
+.risk.low {
+  color: #3d775a;
+  background: #eef6f0;
+}
+.badge.amber,
+.risk.medium {
+  color: #927035;
+  background: #fbf6ea;
+}
+.badge.red,
+.risk.high {
+  color: #a35b63;
+  background: #fcf0f2;
+}
+.demo-banner strong,
+.demo-banner button {
+  color: #8056a3;
+}
+.demo-banner {
+  color: #9075a6;
+}
+.text-button {
+  color: #8055a2;
+  font-size: 11px;
+}
+.cloud-distribution-list button {
+  font-size: 10px;
+  color: #7b648c;
+}
+.cloud-distribution-list strong {
+  font-size: 11px;
+  color: #645170;
+}
+.cloud-distribution-list button > span:last-child {
+  font-size: 9px;
+  color: #8c759c;
+}
+.connection-health strong,
+.activity-row strong {
+  font-size: 11px;
+  color: #80628f;
+}
+.connection-health small,
+.activity-row p {
+  font-size: 9px;
+  color: #9980a9;
+}
+.activity-row p > span {
+  color: #9980a9;
+}
+.bottom-grid .card-heading h2 {
+  font-size: 13px;
+}
+.bottom-grid .card-heading p {
+  font-size: 10px;
+}
+.insight-card h2 {
+  color: #8554a4;
+}
+.insight-card p {
+  font-size: 10px;
+  color: #9371a8;
+}
+.insight-card button {
+  font-size: 10px;
+  color: #80549c;
+}
+.donut span,
+.donut small {
+  color: #8a7498;
+}
+.subtle-tag {
+  color: #8b749c;
+  font-size: 9px;
+}
+.account-card h2,
+.settings-card h2 {
+  color: #78568d;
+}
+.account-card > p,
+.account-meta,
+.account-meta strong,
+.account-card > code,
+.account-summary,
+.settings-card > p,
+.check-line,
+.settings-line,
+.settings-line strong {
+  color: #8a709c;
+}
+.settings-card label,
+.settings-card input {
+  color: #876497;
+}
+.account-card > code {
+  font-size: 11px;
+}
+.account-meta,
+.account-meta strong {
+  font-size: 10px;
+}
+.account-summary {
+  font-size: 11px;
+}
+.report-hero h2 {
+  color: #80519f;
+}
+.report-hero p,
+.report-row small {
+  color: #9474a5;
+}
+.report-row strong {
+  color: #805c98;
+}
+.audit-row strong {
+  color: #7c5394;
+}
+.audit-row p,
+.audit-row time,
+.audit-row small {
+  color: #9677a7;
+}
+.modal-heading h2,
+.modal-body h3,
+.detail-title h2 {
+  color: #76508d;
+}
+.modal-heading p,
+.detail-title p,
+.detail-metrics > div > span,
+.evidence-grid > div > span {
+  color: #9776a9;
+}
+.modal-body label,
+.modal-body input,
+.modal-body textarea,
+.modal-body select {
+  color: #79568e;
+}
+.evidence-grid strong,
+.evidence-grid code,
+.modal-body > .muted,
+.help-body > p,
+.setup-copy,
+.assessment-copy,
+.limitation,
+.plan-steps {
+  color: #8b689e;
+}
+.route-box code,
+.route-box span,
+.route-box small,
+.hash-box,
+.hash-box code,
+.config-line span,
+.config-line code {
+  color: #8c699f;
+}
+.setup-summary h3,
+.setup-summary p,
+.setup-summary code {
+  color: #8c689f;
+}
+.detail-metrics strong {
+  color: #80549d;
+}
+.provider-option strong,
+.mode-options strong,
+.provider-heading h3 {
+  color: #88649d;
+}
+.provider-option small,
+.mode-options small,
+.modal-body label small,
+.wizard-steps > span {
+  color: #a184b2;
+}
+.wizard-steps .current {
+  color: #85589f;
+}
+.assessment-copy,
+.setup-copy,
+.limitation,
+.modal-body label,
+.modal-body input,
+.modal-body textarea,
+.modal-body select {
+  font-size: 12px;
+}
+.help-body > p {
+  font-size: 12px;
+}
+.inline-notice {
+  color: #89639f;
+}
+.inline-notice.amber {
+  color: #92703b;
+}
+.inline-notice.red {
+  color: #a4595e;
+}
+.auth-form > p,
+.auth-footnote,
+.auth-switch,
+.auth-story > div > p,
+.auth-clouds > span,
+.auth-proof {
+  color: #8b6a9e;
+}
+.auth-form label,
+.auth-form input,
+.auth-form input::placeholder {
+  color: #8b699c;
+}
+.demo-button {
+  color: #8b64a3;
+}
+.demo-button small {
+  color: #a185b0;
+}
+@media (max-width: 700px) {
+  .kpi-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+  .kpi-value {
+    font-size: 22px;
+  }
+  .kpi-top {
+    font-size: 9px;
+  }
+  .kpi-foot {
+    font-size: 8px;
+  }
+  .card-heading h2 {
+    font-size: 12px;
+  }
+  .card-heading p {
+    font-size: 9px;
+  }
+  .table-title {
+    font-size: 11px;
+  }
+  .section-title p {
+    font-size: 9px;
+  }
+  .text-button {
+    font-size: 10px;
+  }
+  .card-heading .text-button {
+    font-size: 10px;
+  }
+  .freshness {
+    font-size: 9px;
+  }
+  .account-summary {
+    font-size: 10px;
+  }
+  .filter-select select {
+    font-size: 10px;
+  }
+  .auth-story > div > p {
+    font-size: 12px;
+  }
+}
