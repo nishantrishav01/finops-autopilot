@@ -16,9 +16,15 @@ npx cdk diff
 npx cdk deploy --all --strict --outputs-file ../.cache/deployment-outputs.json
 ```
 
-Review the diff before deployment. Outputs identify the application URL, API URL, collector role, DynamoDB table and analytics bucket. Generated outputs are ignored and must not be committed to the public repository. Open the application URL and choose secure sign-in; Cognito verifies your email and enrolls TOTP MFA. Each new identity gets an empty workspace. No sample account or billing is created.
+Review the diff before deployment. Outputs identify the application URL, API URL, collector role, DynamoDB table and analytics bucket. Generated outputs are ignored and must not be committed to the public repository. Open the application URL and choose secure sign-in; Cognito verifies your email. TOTP MFA is optional; new users are not required to enroll an authenticator. Each new identity gets an empty workspace. No sample account or billing is created.
 
 `FinOpsData` and `FinOpsApplication` use termination protection. Stateful resources use retention; DynamoDB has point-in-time recovery, customer-managed encryption and deletion protection. Bucket versioning protects analytics objects. Retention is not a cross-region backup or a tested disaster recovery plan.
+
+## Cognito MFA policy
+
+MFA is **OPTIONAL**, per the project owner's preference. New users register with name, email and password, verify their email, and can sign in without authenticator enrollment. Email verification remains required and is separate from an MFA challenge.
+
+Users who already enabled a preferred MFA factor can still receive an MFA challenge. Changing the pool policy does not erase their enrolled factor or preference. The current hosted sign-in UI does not provide a new optional-MFA enrollment/settings screen; that requires a separate application workflow. The deployment does not reset existing users' preferences.
 
 ## Initial account quota
 
@@ -30,7 +36,7 @@ Before a broader rollout, request an appropriate Lambda concurrency quota, reser
 
 Run backend tests, frontend build, desktop/mobile workflows, CDK assertions and strict synthesis. Confirm no secrets, databases, cloud outputs or private customer exports are staged in Git. `cdk diff` must show the intended change without replacement of stateful resources. Keep stable CDK construct IDs after deployment.
 
-Smoke-test the public frontend, `/v1/auth/config`, an unauthenticated business route (401), and the Cognito redirect (state + PKCE + secure cookie). The operator/customer must complete a real interactive MFA sign-in and authorized billing collection to accept that integration; HTTP smoke tests do not prove customer IAM permissions, billing accuracy or customer-specific compliance.
+Smoke-test the public frontend, `/v1/auth/config`, an unauthenticated business route (401), and the Cognito redirect (state + PKCE + secure cookie). The operator/customer must complete a real interactive sign-in and authorized billing collection to accept that integration; HTTP smoke tests do not prove customer IAM permissions, billing accuracy or customer-specific compliance.
 
 ## Cloud collection
 
@@ -72,7 +78,7 @@ Every tenant still needs its own current administrator consent. India-only clien
 ## Regulated production acceptance gates
 
 - Use a customer domain and ACM certificate with an explicit modern CloudFront TLS policy. AWS's generated CloudFront hostname uses its default certificate policy; setting a minimum protocol property alone does not change it.
-- Complete interactive Cognito MFA acceptance, session revocation/security review, enterprise federation and workspace invitation/role administration requirements.
+- Complete interactive Cognito sign-in acceptance, optional-MFA behavior, session revocation/security review, enterprise federation and workspace invitation/role administration requirements.
 - Route alarms to an agreed on-call channel; exercise incident handling, failure queue recovery and provider credential revocation.
 - Load-test concurrency, DynamoDB conflict handling, portfolio sizes, active-snapshot dashboard latency and Athena scan limits.
 - Define customer retention, deletion, log access and audit evidence policies; validate backup restores and the required recovery objectives.

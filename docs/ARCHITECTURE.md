@@ -22,7 +22,7 @@ Glue catalogs `finops_billing.billing_snapshots`; Athena workgroup `finops-billi
 
 ## Authentication
 
-Cognito uses verified email, required TOTP MFA, Plus-tier threat protection and authorization-code PKCE. A random five-minute state is browser-bound using a Secure HttpOnly SameSite=Lax cookie and atomically consumed before code exchange. Cognito verifies the access token server-side via GetUser. Tokens never reach browser JavaScript or persistent session storage. The browser receives a one-hour Secure HttpOnly SameSite=Strict opaque cookie; DynamoDB stores only its hash. TTL expiration is enforced in application logic without waiting for DynamoDB TTL deletion.
+Cognito uses verified email, optional TOTP MFA, Plus-tier threat protection and authorization-code PKCE. A random five-minute state is browser-bound using a Secure HttpOnly SameSite=Lax cookie and atomically consumed before code exchange. Cognito verifies the access token server-side via GetUser. Tokens never reach browser JavaScript or persistent session storage. The browser receives a one-hour Secure HttpOnly SameSite=Strict opaque cookie; DynamoDB stores only its hash. TTL expiration is enforced in application logic without waiting for DynamoDB TTL deletion.
 
 Local accounts use scrypt and eight-hour HttpOnly cookies over loopback HTTP. They are separate from Cognito users. Signing out revokes the application session; Cognito's own session may still support sign-in, subject to MFA/risk policy. Enterprise federation, invitations and delegated role-administration UI remain rollout work. Each self-registered cloud identity currently owns one new workspace.
 

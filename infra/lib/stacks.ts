@@ -35,9 +35,10 @@ export class DataStack extends cdk.Stack {
     this.pool = new cognito.UserPool(this,'Customers',{selfSignUpEnabled:true,signInAliases:{email:true},
       featurePlan:cognito.FeaturePlan.PLUS,standardThreatProtectionMode:cognito.StandardThreatProtectionMode.FULL_FUNCTION,
       autoVerify:{email:true},standardAttributes:{email:{required:true,mutable:true},fullname:{required:true,mutable:true}},
-      mfa:cognito.Mfa.REQUIRED,mfaSecondFactor:{sms:false,otp:true},accountRecovery:cognito.AccountRecovery.EMAIL_ONLY,
+      mfa:cognito.Mfa.OPTIONAL,mfaSecondFactor:{sms:false,otp:true},accountRecovery:cognito.AccountRecovery.EMAIL_ONLY,
       passwordPolicy:{minLength:12,requireDigits:true,requireLowercase:true,requireUppercase:true,requireSymbols:true},
       removalPolicy:cdk.RemovalPolicy.RETAIN});
+    NagSuppressions.addResourceSuppressions(this.pool,[{id:'AwsSolutions-COG2',reason:'The project owner explicitly requested optional MFA. Verified email, strong passwords, PKCE and secure server-side sessions remain enforced; existing user MFA preferences are preserved.'}]);
     const trailArn = this.formatArn({service:'cloudtrail',resource:'trail',resourceName:'finops-management',arnFormat:cdk.ArnFormat.SLASH_RESOURCE_NAME});
     this.key.addToResourcePolicy(new iam.PolicyStatement({principals:[new iam.ServicePrincipal('cloudtrail.amazonaws.com')],
       actions:['kms:GenerateDataKey*','kms:DescribeKey','kms:Decrypt'],resources:['*'],conditions:{StringEquals:{'aws:SourceArn':trailArn}}}));

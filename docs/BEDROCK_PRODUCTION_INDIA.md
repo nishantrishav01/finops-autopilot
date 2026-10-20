@@ -10,7 +10,7 @@ The local application implements that first advisory stage for AWS, Azure and GC
 
 | Available locally | Required for production |
 |---|---|
-| Tenant-scoped AI policy, admin role check and explicit global opt-in | Enterprise SSO/MFA, verified client authority, delegated administration and contract approval record |
+| Tenant-scoped AI policy, admin role check and explicit global opt-in | Enterprise SSO and customer-selected MFA policies, verified client authority, delegated administration and contract approval record |
 | Scoped facts, fixed action catalog, pinned guardrail requirement and output validation | Guardrail deployment/evaluation, IAM-enforced restrictions, DLP tests and independently reviewed threat model |
 | Idempotent jobs, quotas, current-context cache and rejection on changed context | Durable queue, leases, cancellation, distributed quotas, account-wide spend controls and reconciliation |
 | Fact references, version metadata, usage and user feedback | Held-out quality evaluation, customer UAT, continuous drift monitoring and incident response |
@@ -25,7 +25,7 @@ The diagram includes the broader production target. The CDK implementation now p
 
 ```mermaid
 flowchart TB
-    USER[Client user] --> EDGE[HTTPS gateway / OIDC / MFA]
+    USER[Client user] --> EDGE[HTTPS gateway / OIDC / optional MFA]
     EDGE --> API[Tenant-aware API and authorization]
     API --> POLICY[Client processing policy / approved route registry]
     API --> WORK[Durable queue and scoped workers]
@@ -124,7 +124,7 @@ Require zero observed cross-tenant disclosure, unauthorized transfer, policy ove
 | Gate | Acceptance evidence | Accountable owner |
 |---|---|---|
 | Customer processing | Signed obligations/transfer/retention review and verified administrator scope | Client legal/security + platform privacy owner |
-| Identity/isolation | SSO/MFA, server authorization and adversarial tenant/role/cache/retrieval tests | Security engineering |
+| Identity/isolation | SSO and customer-selected MFA, server authorization and adversarial tenant/role/cache/retrieval tests | Security engineering |
 | Model route | Real entitled account, published guardrail, permitted IAM/SCP route and reviewed terms | AWS/platform owner |
 | AI quality | Held-out expert evaluation, prompt-injection tests and customer UAT | FinOps + AI engineering |
 | Reliability | Durable jobs, timeout/duplicate/crash tests, capacity test and agreed SLOs | Platform/SRE |

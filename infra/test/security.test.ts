@@ -22,8 +22,8 @@ test('operational data is encrypted, retained, protected and recoverable',()=>{
   persistent.resourceCountIs('AWS::RDS::DBCluster',0);
   persistent.resourceCountIs('AWS::RDS::DBProxy',0);
 });
-test('Cognito requires MFA and verified email',()=>{
-  persistent.hasResourceProperties('AWS::Cognito::UserPool',{MfaConfiguration:'ON',UserPoolTier:'PLUS',
+test('Cognito keeps MFA optional and requires verified email',()=>{
+  persistent.hasResourceProperties('AWS::Cognito::UserPool',{MfaConfiguration:'OPTIONAL',UserPoolTier:'PLUS',
     AutoVerifiedAttributes:['email'],EnabledMfas:['SOFTWARE_TOKEN_MFA']});
 });
 test('durable work uses a stream outbox, Standard workflow and failure queue',()=>{

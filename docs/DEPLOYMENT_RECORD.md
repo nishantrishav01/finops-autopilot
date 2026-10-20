@@ -4,6 +4,8 @@ Date: 20 October 2026. Region: Mumbai (`ap-south-1`).
 
 Both CDK stacks deployed successfully: `FinOpsData` and `FinOpsApplication`.
 
+MFA policy update: the owner requested that MFA not be mandatory. CDK now deploys `OPTIONAL`; the live Cognito configuration was verified as `OPTIONAL` with software-token support retained, and `FinOpsData` returned `UPDATE_COMPLETE`. New users can sign in without authenticator enrollment after verifying their email. Existing users' enrolled MFA preferences are preserved. Five infrastructure assertions, type checking and strict synthesis passed for this update.
+
 The final CDK release completed successfully. It retains the existing cross-stack log-bucket export, disables legacy edge query-string logging, and enables injected Athena partitions requiring explicit tenant, connection and snapshot filters. The repeated public HTTP smoke checks passed after this release.
 
 Application: **https://d3uun3y7jmy2gy.cloudfront.net**
@@ -16,6 +18,6 @@ The data-stack recovery preserved/imported the five retained resources and corre
 
 The local application is available at http://127.0.0.1:8000 with an empty real workspace state. Local synthetic tenant/connection counts are zero. Create your own workspace and onboard the real AWS account using either the IAM role or access-key option.
 
-Bedrock remains disabled at the operator level until its published guardrail, model entitlement, restricted invocation IAM and evaluation gates are completed. The account's Lambda concurrency quota is 10; a larger rollout requires quota/load acceptance. Customer MFA registration and customer-authorized billing collection remain interactive acceptance steps. See [DEPLOYMENT.md](DEPLOYMENT.md).
+Bedrock remains disabled at the operator level until its published guardrail, model entitlement, restricted invocation IAM and evaluation gates are completed. The account's Lambda concurrency quota is 10; a larger rollout requires quota/load acceptance. Customer sign-in and customer-authorized billing collection remain interactive acceptance steps; MFA enrollment is optional. See [DEPLOYMENT.md](DEPLOYMENT.md).
 
 The public source repository is [nishantrishav01/finops-autopilot](https://github.com/nishantrishav01/finops-autopilot). Private deployment resource identifiers and generated outputs stay local under `.cache/`.

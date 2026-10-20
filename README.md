@@ -39,7 +39,7 @@ flowchart LR
   CloudFront --> PrivateS3[Private S3 frontend]
   CloudFront --> WAF[Regional API Gateway + WAF]
   WAF --> API[Lambda / FastAPI]
-  Browser --> Cognito[Cognito + verified email + TOTP MFA]
+  Browser --> Cognito[Cognito + verified email + optional TOTP MFA]
   Cognito --> API
   API --> DDB[DynamoDB operational records]
   DDB --> Stream[DynamoDB stream outbox]
@@ -54,7 +54,7 @@ flowchart LR
   Stream -. failure .-> DLQ[SQS failure queue + alarms]
 ```
 
-Cloud sign-in uses Cognito authorization code + PKCE, verified email and required TOTP MFA. Tokens remain on the server; the browser receives an HttpOnly Secure session cookie. A new verified identity receives its own empty tenant, never another customer's records. Local passwords/sessions are not copied into Cognito.
+Cloud sign-in uses Cognito authorization code + PKCE, verified email and optional TOTP MFA. Tokens remain on the server; the browser receives an HttpOnly Secure session cookie. A new verified identity receives its own empty tenant, never another customer's records. Local passwords/sessions are not copied into Cognito.
 
 ```powershell
 npm ci --prefix infra
