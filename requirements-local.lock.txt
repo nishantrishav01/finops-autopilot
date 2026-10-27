@@ -59,7 +59,7 @@ pydantic==2.14.1
 pydantic_core==2.50.1
 pyparsing==3.3.3
 pytest==9.1.1
-python-dateutil==2.9.0.post0
+python-dateutil==3.0.0
 requests==2.34.2
 rich==15.0.0
 s3transfer==0.19.3
