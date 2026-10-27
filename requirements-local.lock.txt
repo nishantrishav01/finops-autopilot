@@ -54,7 +54,7 @@ protobuf==7.36.2
 py-serializable==2.1.0
 pyasn1==0.6.4
 pyasn1_modules==0.4.2
-pycparser==3.11
+pycparser==3.12
 pydantic==2.14.1
 pydantic_core==2.50.1
 pyparsing==3.3.3
